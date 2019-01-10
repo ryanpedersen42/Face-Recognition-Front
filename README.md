@@ -1,3 +1,7 @@
+This is the front end of the Face Recognition App, to be paired with the Face-Recognition-Back repository.
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
