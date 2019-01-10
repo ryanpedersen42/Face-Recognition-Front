@@ -6,6 +6,7 @@ class Register extends React.Component {
     this.state = {
       email: '',
       password: '',
+      confirmPassword: '',
       name: '',
     }
   }
@@ -19,7 +20,14 @@ class Register extends React.Component {
     this.setState({password: event.target.value})
   }
 
+  onConfirmPasswordChange = (event) => {
+    this.setState({confirmPassword: event.target.value})
+  }
+
   onSubmitSignin = () => {
+    if (this.state.password !== this.state.confirmPassword) {
+      return alert('need passwords to match');
+    }
     fetch('http://localhost:3000/register', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
@@ -71,6 +79,15 @@ class Register extends React.Component {
                 onChange={this.onPasswordChange}
                 />
               </div>
+              <div className="mv3">
+              <label className="db fw6 lh-copy f6" for="password">Confirm Password</label>
+              <input className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
+              type="password" 
+              name="password"  
+              id="password" 
+              onChange={this.onConfirmPasswordChange}
+              />
+            </div>
             </fieldset>
             <div className="">
               <input 

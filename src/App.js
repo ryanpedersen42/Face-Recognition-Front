@@ -74,6 +74,9 @@ class App extends Component {
   }
 
   onButtonSubmit = () => {
+    if (this.state.input.length < 1) {
+      return alert('need input');
+    }
     this.setState({ imageURL: this.state.input });
     fetch('http//localhost:3000/imageurl', {
       method: 'post',
