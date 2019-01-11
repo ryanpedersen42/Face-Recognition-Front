@@ -5,29 +5,79 @@ class Register extends React.Component {
     super(props);
     this.state = {
       email: '',
-      password: '',
-      confirmPassword: '',
       name: '',
-    }
-  }
-  onNameChange = (event) => {
-    this.setState({name: event.target.value})
-  }
-  onEmailChange = (event) => {
-    this.setState({email: event.target.value})
-  }
-  onPasswordChange = (event) => {
-    this.setState({password: event.target.value})
+      password: '',
+      comment: '',
+      confirmPassword:'',
+      formErrors: {
+        email: '',
+        name:'', 
+        password: '', 
+        confirmPassword: '',
+      },
+      formValidity: {
+        email: false,
+        name: false, 
+        password: false, 
+        confirmPassword: false,
+      },
+      canSubmit: false,
+    };
+    this.handleChange = this.handleChange.bind(this)
   }
 
-  onConfirmPasswordChange = (event) => {
-    this.setState({confirmPassword: event.target.value})
+  handleChange(event) {
+    const { name, value } = event.target
+    this.setState({
+      // use dynamic name value to set our state object property
+      [name]: value
+    }, function(){ this.validateField(name, value)})
+  }
+
+  validateField(name, value) {
+    if(Object.keys(this.state.formValidity).includes(name)){
+      const fieldValidationErrors = this.state.formErrors
+      const validity = this.state.formValidity
+      const isEmail = name === "email"
+      const isPassword = name === "password"
+      const isPasswordConfirmation = name === "confirmPassword"
+      const label = name === "confirmPassword"? 'password confirmation' : name
+      const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i
+  
+      validity[name] = value.length >0
+      fieldValidationErrors[name] = validity[name] ? '': `${label} is required and cannot be empty`
+  
+      if(validity[name]) {
+        if(isPassword){
+          validity[name] = value.length >= 5;
+          fieldValidationErrors[name] = validity[name] ? '': `${label} should be 5 characters or more`
+        }
+        if(isEmail){
+          validity[name] = emailTest.test(value);
+          fieldValidationErrors[name] = validity[name] ? '' : `${label} should be a valid email address`
+        }
+        if(isPasswordConfirmation){
+          validity[name] = value === this.state.password
+          fieldValidationErrors[name] = validity[name] ? '' : `${label} should match password`
+        }
+      }
+    
+      this.setState({
+        formErrors: fieldValidationErrors,
+        formValidity: validity,
+      }, () => this.canSubmit())
+    }
+  }
+
+  canSubmit() {
+    this.setState({ canSubmit: this.state.formValidity.email && this.state.formValidity.name && this.state.formValidity.password && this.state.formValidity.confirmPassword })
+  }
+
+  errorClass(error) {
+    return(error.length === 0 ? '' : 'is-invalid');
   }
 
   onSubmitSignin = () => {
-    if (this.state.password !== this.state.confirmPassword) {
-      return alert('need passwords to match');
-    }
     fetch('http://localhost:3000/register', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
@@ -48,58 +98,68 @@ class Register extends React.Component {
   render() {
     return (
       <article className='br2 ba b--black-10 mv4 w-100 w-50-m w-25-1 mw6 shadow-5 center'>
-        <main className="pa4 black-80">
-          <div className="measure">
-            <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-              <legend className="f1 fw6 ph0 mh0">Register</legend>
-              <div className="mt3">
-                <label className="db fw6 lh-copy f6" for="email-address">Name</label>
-                <input className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
-                type="name" 
-                name="name"  
-                id="name" 
-                onChange={this.onNameChange}
-                />
-              </div>
-              <div className="mt3">
-                <label className="db fw6 lh-copy f6" for="email-address">Email</label>
-                <input className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
-                type="email" 
-                name="email-address"  
-                id="email-address" 
-                onChange={this.onEmailChange}
-                />
-              </div>
-              <div className="mv3">
-                <label className="db fw6 lh-copy f6" for="password">Password</label>
-                <input className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
-                type="password" 
-                name="password"  
-                id="password" 
-                onChange={this.onPasswordChange}
-                />
-              </div>
-              <div className="mv3">
-              <label className="db fw6 lh-copy f6" for="password">Confirm Password</label>
-              <input className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
+      <main onSubmit={this.handleSubmit} 
+      className="pa4 black-80">
+        <div className="measure">
+          <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
+            <legend className="f1 fw6 ph0 mh0">Register</legend>
+            <div className="mt3">
+              <label className="db fw6 lh-copy f6" for="name">Name</label>
+              <input className={` ${this.errorClass(this.state.formErrors.name)} b pa2 input-reset ba bg-transparent hover-bg-white hover-black w-100`}
+              type="name" 
+              name="name"  
+              id="name" 
+              value={this.state.name}
+              onChange={this.handleChange}
+              />
+              <div className="invalid-feedback">{this.state.formErrors.name}</div>
+            </div>
+            <div className="mt3">
+              <label className="db fw6 lh-copy f6" for="email-address">Email</label>
+              <input className={` ${this.errorClass(this.state.formErrors.email)} b pa2 input-reset ba bg-transparent hover-bg-white hover-black w-100`}
+              type="email" 
+              name="email"  
+              id="email-address" 
+              value={this.state.email}
+              onChange={this.handleChange}
+              />
+              <div className="invalid-feedback">{this.state.formErrors.email}</div>
+            </div>
+            <div className="mv3">
+              <label className="db fw6 lh-copy f6" for="password">Password</label>
+              <input className={` ${this.errorClass(this.state.formErrors.password)} b pa2 input-reset ba bg-transparent hover-bg-white hover-black w-100`}
               type="password" 
               name="password"  
               id="password" 
-              onChange={this.onConfirmPasswordChange}
+              value={this.state.password}
+              onChange={this.handleChange}
               />
+              <div className="invalid-feedback">{this.state.formErrors.password}</div>
             </div>
-            </fieldset>
-            <div className="">
-              <input 
-                onClick={this.onSubmitSignin}
-                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
-                type="submit" 
-                value="Register" 
-                />
+            <div className="mv3">
+              <label className="db fw6 lh-copy f6" for="password">Confirm Password</label>
+              <input className={` ${this.errorClass(this.state.formErrors.confirmPassword)} b pa2 input-reset ba bg-transparent hover-bg-white hover-black w-100`}
+              type="password" 
+              name="confirmPassword"  
+              id="confirmPassword" 
+              value={this.state.confirmPassword}
+              onChange={this.handleChange} 
+              />
+              <div className="invalid-feedback">{this.state.formErrors.confirmPassword}</div>
             </div>
+          </fieldset>
+          <div className="">
+            <input 
+              disabled={!this.state.canSubmit}              
+              onClick={this.onSubmitSignin}
+              className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
+              type="submit" 
+              value="Register" 
+              />
           </div>
-      </main>
-      </article>
+        </div>
+    </main>
+    </article>
       );
   }
 }
