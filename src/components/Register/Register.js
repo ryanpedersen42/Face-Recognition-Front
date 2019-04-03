@@ -45,20 +45,20 @@ class Register extends React.Component {
       const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i
   
       validity[name] = value.length >0
-      fieldValidationErrors[name] = validity[name] ? '': `${label} is required and cannot be empty`
+      fieldValidationErrors[name] = validity[name] ? '': `${label} is required`
   
       if(validity[name]) {
         if(isPassword){
           validity[name] = value.length >= 5;
-          fieldValidationErrors[name] = validity[name] ? '': `${label} should be 5 characters or more`
+          fieldValidationErrors[name] = validity[name] ? '': `${label} longer`
         }
         if(isEmail){
           validity[name] = emailTest.test(value);
-          fieldValidationErrors[name] = validity[name] ? '' : `${label} should be a valid email address`
+          fieldValidationErrors[name] = validity[name] ? '' : `not valid ${label}`
         }
         if(isPasswordConfirmation){
           validity[name] = value === this.state.password
-          fieldValidationErrors[name] = validity[name] ? '' : `${label} should match password`
+          fieldValidationErrors[name] = validity[name] ? '' : `needs to match`
         }
       }
     
@@ -103,9 +103,9 @@ class Register extends React.Component {
         <div className="measure">
           <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
             <legend className="f1 fw6 ph0 mh0">Register</legend>
-            <div className="mt3">
+            <div className="mv3">
               <label className="db fw6 lh-copy f6" for="name">Name</label>
-              <input className={` ${this.errorClass(this.state.formErrors.name)} b pa2 input-reset ba bg-transparent hover-bg-white hover-black w-100`}
+              <input className={` ${this.errorClass(this.state.formErrors.name)} b pa2 input-reset ba bg-transparent hover-bg-white hover-black w-90`}
               type="name" 
               name="name"  
               id="name" 
@@ -114,7 +114,7 @@ class Register extends React.Component {
               />
               <div className="invalid-feedback">{this.state.formErrors.name}</div>
             </div>
-            <div className="mt3">
+            <div className="mv3">
               <label className="db fw6 lh-copy f6" for="email-address">Email</label>
               <input className={` ${this.errorClass(this.state.formErrors.email)} b pa2 input-reset ba bg-transparent hover-bg-white hover-black w-100`}
               type="email" 
