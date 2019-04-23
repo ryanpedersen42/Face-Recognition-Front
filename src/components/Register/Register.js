@@ -105,7 +105,7 @@ class Register extends React.Component {
             <legend className="f1 fw6 ph0 mh0">Register</legend>
             <div className="mv3">
               <label className="db fw6 lh-copy f6" for="name">Name</label>
-              <input className={` ${this.errorClass(this.state.formErrors.name)} b pa2 input-reset ba bg-transparent hover-bg-white hover-black w-90`}
+              <input className={` ${this.errorClass(this.state.formErrors.name)} b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-90`}
               type="name" 
               name="name"  
               id="name" 
@@ -116,7 +116,7 @@ class Register extends React.Component {
             </div>
             <div className="mv3">
               <label className="db fw6 lh-copy f6" for="email-address">Email</label>
-              <input className={` ${this.errorClass(this.state.formErrors.email)} b pa2 input-reset ba bg-transparent hover-bg-white hover-black w-100`}
+              <input className={` ${this.errorClass(this.state.formErrors.email)} b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100`}
               type="email" 
               name="email"  
               id="email-address" 
@@ -127,7 +127,7 @@ class Register extends React.Component {
             </div>
             <div className="mv3">
               <label className="db fw6 lh-copy f6" for="password">Password</label>
-              <input className={` ${this.errorClass(this.state.formErrors.password)} b pa2 input-reset ba bg-transparent hover-bg-white hover-black w-100`}
+              <input className={` ${this.errorClass(this.state.formErrors.password)} b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100`}
               type="password" 
               name="password"  
               id="password" 
@@ -138,7 +138,7 @@ class Register extends React.Component {
             </div>
             <div className="mv3">
               <label className="db fw6 lh-copy f6" for="password">Confirm Password</label>
-              <input className={` ${this.errorClass(this.state.formErrors.confirmPassword)} b pa2 input-reset ba bg-transparent hover-bg-white hover-black w-100`}
+              <input className={` ${this.errorClass(this.state.formErrors.confirmPassword)} b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100`}
               type="password" 
               name="confirmPassword"  
               id="confirmPassword" 
