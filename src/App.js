@@ -27,7 +27,7 @@ const particlesOptions = {
     input: '',
     imageURL: '',
     boxes: [],
-    route: 'home',
+    route: 'signin',
     isSignedIn: false,
     isProfileOpen: false,
     user: {
@@ -36,6 +36,8 @@ const particlesOptions = {
       email: '',
       entries: 0,
       joined: '',
+      age: 0,
+      pet: ''
     }
   }
 class App extends Component {
@@ -53,6 +55,40 @@ class App extends Component {
       joined: data.joined,
     }})
   }
+
+  componentDidMount() {
+    const token = window.sessionStorage.getItem('token');
+    if (token) {
+      fetch('http://localhost:3000/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.id) {
+            fetch(`http://localhost:3000/profile/${data.id}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+              }
+            })
+            .then(response => response.json())
+            .then(user => {
+              if (user && user.email) {
+                this.loadUser(user)
+                this.onRouteChange('home');
+              }
+            })
+          }
+        })
+        .catch(console.log)
+    }
+  }
+
 
   calculateFaceLocation = (data) => {
      return data.outputs[0].data.regions.map(face => {
@@ -128,7 +164,7 @@ class App extends Component {
   }
     
   render() {
-    const { isSignedIn, imageURL, route, boxes, isProfileOpen } = this.state;
+    const { isSignedIn, imageURL, route, boxes, isProfileOpen, user } = this.state;
     return (
       <div className="App">
       <Particles
@@ -138,7 +174,7 @@ class App extends Component {
       <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}
       toggleModal={this.toggleModal} />
       { isProfileOpen && <Modal>
-        <Profile isProfileOpen={isProfileOpen} toggleModal={this.toggleModal} />
+        <Profile isProfileOpen={isProfileOpen} toggleModal={this.toggleModal} user={user} loadUser={this.loadUser}/>
       </Modal> }
       { route === 'home' 
         ? <div>
