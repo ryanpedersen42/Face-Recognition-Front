@@ -14,6 +14,11 @@ class SignIn extends React.Component {
   onPasswordChange = (event) => {
     this.setState({signInPassword: event.target.value})
   }
+
+  saveAuthTokenInSession = (token) => {
+    window.sessionStorage.setItem('token', token)  
+  }
+
   onSubmitSignin = () => {
     fetch('http://localhost:3000/signin/', {
       method: 'post',
@@ -24,15 +29,17 @@ class SignIn extends React.Component {
       })
     })
       .then(response => response.json())
-      .then(user => {
-        if (user.id) {
-          this.props.loadUser(user);
+      .then(data => {
+        if (data.userId && data.success === 'true') {
+          this.saveAuthTokenInSession(data.token)
+          this.props.loadUser(data.user);
           this.props.onRouteChange('home');
         } else {
           alert(`this un / pw combo doesn't exist`)
         } 
     })
   }
+
 
   render() {  
     const { onRouteChange } = this.props; 

@@ -27,6 +27,25 @@ class Profile extends Component {
         }
     }
 
+
+  onProfileUpdate = (data) => {
+    fetch(`http://localhost:3000/profile/${this.props.user.id}`, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': window.sessionStorage.getItem('token')
+      },
+      body: JSON.stringify({
+        formInput: data
+      })
+    }).then(resp => {
+      if (resp.status === 200 || resp.status === 304) {
+        this.props.toggleModal();
+        this.props.loadUser({ ...this.props.user, ...data });
+      }
+    }).catch(console.log)
+  }
+
     render() {
         const { toggleModal, user } = this.props;
         const { name, age, pet } = this.state;
@@ -39,8 +58,8 @@ class Profile extends Component {
                         className="br-100 ba h3 w3 dib" alt="avatar"
                         />
                         <h1>{name}</h1>
-                        <h4>Images Submitted: {user.entries}</h4>
-                        <p>Member since: January</p>
+                        <h4>{`Images Submitted: ${user.entries}`}</h4>
+                        <p>{`Member since: ${new Date(user.joined).toLocaleDateString()}`}</p>
                         <hr />
                         <label className="mt2 fw6" htmlFor="user-name">Name: </label>
                         <input 
@@ -67,7 +86,9 @@ class Profile extends Component {
                         id="pet" 
                         />
                         <div className="mt4" style={{display: 'flex', justifyContent: 'space-evenly'}}>
-                            <button className="b pa2 grow pointer hover-white w-40 bg-light-blue b--black-20">Save</button>
+                            <button className="b pa2 grow pointer hover-white w-40 bg-light-blue b--black-20"
+                            onClick={this.onProfileUpdate({ name, age, pet })}>
+                            Save</button>
                             <button className="b pa2 grow pointer hover-white w-40 bg-light-red b--black-20"
                             onClick={this.props.toggleModal}>Cancel</button>
                         </div>

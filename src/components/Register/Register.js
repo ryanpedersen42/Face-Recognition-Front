@@ -105,7 +105,7 @@ class Register extends React.Component {
             <legend className="f1 fw6 ph0 mh0">Register</legend>
             <div className="mv3">
               <label className="db fw6 lh-copy f6" for="name">Name</label>
-              <input className={` ${this.errorClass(this.state.formErrors.name)} b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-90`}
+              <input className={` ${this.errorClass(this.state.formErrors.name)} b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100`}
               type="name" 
               name="name"  
               id="name" 
