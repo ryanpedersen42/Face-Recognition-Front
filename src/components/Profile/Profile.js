@@ -90,10 +90,10 @@ class Profile extends Component {
                             onClick={this.onProfileUpdate({ name, age, pet })}>
                             Save</button>
                             <button className="b pa2 grow pointer hover-white w-40 bg-light-red b--black-20"
-                            onClick={this.props.toggleModal}>Cancel</button>
+                            onClick={toggleModal}>Cancel</button>
                         </div>
                 </main>
-                <div className="modal-close" onClick={this.props.toggleModal}>&times;</div>
+                <div className="modal-close" onClick={toggleModal}>&times;</div>
             </article>
         </div>
         )
