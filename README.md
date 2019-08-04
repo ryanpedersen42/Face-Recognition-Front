@@ -39,5 +39,5 @@ You will also see any lint errors in the console.
 
 ## Usage
 
-Using RoboFriends
+Using Face Recognition App
 ![Using Face Recognition App](/Images/Face-Recognition-App.gif)
